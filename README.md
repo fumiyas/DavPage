@@ -1,0 +1,142 @@
+DavPage
+======================================================================
+
+A lightweight, single-file WebDAV folder explorer for the browser.
+
+Deploy one `index.html` to your WebDAV folder and get a full-featured
+file management UI — no server-side setup beyond a standard WebDAV server.
+
+## Features
+
+- **Single-file deployment** — build produces a self-contained `dist/index.html`
+  (HTML + CSS + JS inlined) that you simply copy to your WebDAV folder
+- **Multi-file upload** with drag & drop, per-file progress, and cancel
+- **Inline file viewing** — open PDFs, images, text, audio/video directly
+  in the browser
+- **File list with sorting** — sort by name, size, or date
+- **Row-click selection** for batch delete
+- **Configurable** via a simple config file (`davpage.conf`) placed alongside
+  `index.html`
+- **Zero runtime dependencies** — pure vanilla JS in the browser
+- **No mod_autoindex dependency** — uses WebDAV PROPFIND to list files
+
+## Requirements
+
+- A WebDAV server (Apache httpd + mod_dav, Nginx + ngx-dav, etc.)
+- A modern browser (ES2022+)
+
+## Quick Start
+
+```bash
+# Install dev dependencies
+make install
+
+# Build dist/index.html
+make build
+
+# Copy to your WebDAV folder
+cp dist/index.html /path/to/your/webdav/folder/
+```
+
+## Development
+
+### Prerequisites
+
+- Node.js >= 20
+- GNU Make
+
+### Commands
+
+| Command          | Description                                  |
+| ---------------- | -------------------------------------------- |
+| `make install`   | Install dependencies                         |
+| `make build`     | Build `dist/index.html`                      |
+| `make test`      | Run tests                                    |
+| `make lint`      | Type-check with `tsc`                        |
+| `make serve`     | Start a local test WebDAV server             |
+| `make dev`       | Build in watch mode + start test server      |
+| `make clean`     | Remove build artifacts                       |
+| `make distclean` | Remove build artifacts and `node_modules`    |
+| `make help`      | Show all available targets                   |
+
+### Project Structure
+
+```
+src/
+  main.ts          — Entry point
+  webdav.ts        — WebDAV client (PROPFIND, PUT, DELETE)
+  upload.ts        — Multi-file upload UI
+  file-list.ts     — File list table with sorting and selection
+  viewer.ts        — Inline file viewing (MIME detection)
+  config.ts        — Config file parser and loader
+  styles.css       — Stylesheet
+  index.html       — HTML template
+  __tests__/       — Unit and integration tests
+scripts/
+  build.ts         — esbuild bundler (produces single HTML)
+  serve.ts         — Test WebDAV server
+dist/
+  index.html       — Built output (deploy this)
+```
+
+## Configuration
+
+Place a `davpage.conf` file in the same directory as `index.html`.
+If the file is absent or returns 404, default settings are used.
+
+The format is a TOML subset supporting strings, multi-line strings,
+booleans, string arrays, and `#` comments.
+
+### Example
+
+```toml
+# Page title (supports placeholder variables)
+title = "File Exchange — ${dirName}"
+
+# Heading (defaults to title if omitted)
+heading = "Shared Files: ${dirName}"
+
+# Footer HTML (replaces the default notice)
+footer = """
+<h2>Notice</h2>
+<div class="notice">
+  <em>Do not share the URL with unauthorized parties.</em>
+</div>
+"""
+
+# Enable/disable upload and delete UI
+upload_enabled = true
+delete_enabled = true
+
+# Glob patterns to exclude from the file list
+index_exclude_names = ["index.html", "davpage.conf", ".ht*"]
+
+# Hide sub-folders from the file list
+index_ignore_folders = false
+```
+
+### Placeholder Variables
+
+| Variable      | Description                                      |
+| ------------- | ------------------------------------------------ |
+| `${baseUrl}`  | URL without the path (scheme + host + port)      |
+| `${dirName}`  | Last path segment (parent directory name)        |
+| `${path}`     | Full URL path                                    |
+
+### Caching
+
+Config is cached in `sessionStorage` for the browser session.
+On normal page loads the cached config is used immediately while
+a background fetch updates the cache for the next load.
+A hard reload (Ctrl+Shift+R) bypasses the HTTP cache, causing a
+fresh fetch.
+
+## License
+
+Copyright (C) 2026 SATOH Fumiyasu @ OSSTech Corp., Japan
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, version 3 of the License.
+
+See [LICENSE](LICENSE) for the full text.

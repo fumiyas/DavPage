@@ -1,0 +1,372 @@
+/* SPDX-License-Identifier: GPL-3.0-only */
+/* SPDX-FileCopyrightText: 2026 SATOH Fumiyasu @ OSSTech Corp., Japan */
+
+/* DavPage — WebDAV file explorer stylesheet */
+
+/* === 全体 === */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 1em 1.5em;
+  background-color: #fafafa;
+  color: #333;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 1.3em;
+  margin: 0 0 0.8em;
+  padding-bottom: 0.3em;
+  border-bottom: 2px solid #4a90d9;
+  color: #2c3e50;
+}
+
+h2 {
+  font-size: 1.05em;
+  margin: 1.2em 0 0.5em;
+  padding: 0.3em 0.5em;
+  background-color: #e8eef4;
+  border-left: 3px solid #4a90d9;
+  color: #2c3e50;
+}
+
+h3 {
+  font-size: 1em;
+  margin: 0.8em 0 0.4em;
+  border-bottom: 1px solid #ccc;
+  padding-left: 0.3em;
+}
+
+code, kbd, pre, samp {
+  font-family: "Cascadia Code", "Fira Code", Consolas, monospace;
+}
+
+:not(pre) > code {
+  border-radius: 0.2em;
+  padding: 0.1em 0.25em;
+  font-size: 0.9em;
+  color: #c7254e;
+  background-color: #f9f2f4;
+}
+
+kbd {
+  border-radius: 0.2em;
+  padding: 0.1em 0.3em;
+  font-size: 0.85em;
+  color: #fff;
+  background-color: #444;
+}
+
+pre {
+  overflow: auto;
+  margin: 0.8em 1em;
+  border: 1px solid #999;
+  border-radius: 4px;
+  padding: 0.5em 0.8em;
+  color: #f0f0f0;
+  background-color: #3c3c50;
+  font-size: 0.85em;
+  line-height: 1.3;
+}
+
+/* === ボタン === */
+.btn {
+  display: inline-block;
+  padding: 0.35em 0.8em;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: #f5f5f5;
+  color: #333;
+  font-size: 0.9em;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.4;
+  transition: background 0.15s;
+}
+
+.btn:hover {
+  background: #e0e0e0;
+}
+
+.btn-primary {
+  background: #4a90d9;
+  color: #fff;
+  border-color: #3a7bc8;
+}
+
+.btn-primary:hover {
+  background: #3a7bc8;
+}
+
+.btn-primary:disabled {
+  background: #a0c4e8;
+  border-color: #a0c4e8;
+  cursor: not-allowed;
+}
+
+.btn-danger {
+  background: #e74c3c;
+  color: #fff;
+  border-color: #c0392b;
+}
+
+.btn-danger:hover {
+  background: #c0392b;
+}
+
+.btn-danger:disabled {
+  background: #f0a8a0;
+  border-color: #f0a8a0;
+  cursor: not-allowed;
+}
+
+.btn-small {
+  padding: 0.15em 0.5em;
+  font-size: 0.82em;
+}
+
+.btn-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #ddd;
+  color: #666;
+  font-size: 0.85em;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.15s;
+}
+
+.btn-remove:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* === アップロードセクション === */
+.upload-dropzone {
+  border: 2px dashed #bbb;
+  border-radius: 8px;
+  padding: 1.5em;
+  text-align: center;
+  color: #888;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-dropzone:hover,
+.upload-dropzone.dragover {
+  border-color: #4a90d9;
+  background: #eef5fc;
+  color: #4a90d9;
+}
+
+.upload-dropzone.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.upload-input-hidden {
+  display: none;
+}
+
+.upload-file-list {
+  list-style: none;
+  margin: 0.5em 0;
+  padding: 0;
+}
+
+.upload-file-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.3em 0.5em;
+  border-bottom: 1px solid #eee;
+}
+
+.upload-file-item.done {
+  color: #27ae60;
+}
+
+.upload-file-item.error {
+  color: #e74c3c;
+}
+
+.upload-file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.upload-file-size {
+  color: #888;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+.upload-file-bar {
+  width: 100px;
+}
+
+.upload-file-status {
+  font-size: 0.85em;
+  white-space: nowrap;
+  min-width: 6em;
+}
+
+.upload-controls {
+  display: flex;
+  gap: 0.5em;
+  margin: 0.5em 0;
+}
+
+.upload-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0.5em 0;
+}
+
+.upload-overall-bar {
+  flex: 1;
+  max-width: 300px;
+}
+
+/* === ファイル一覧セクション === */
+.filelist-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  margin-bottom: 0.5em;
+}
+
+.filelist-selected-count {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.filelist-table-wrapper {
+  overflow-x: auto;
+}
+
+.filelist-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.filelist-table th,
+.filelist-table td {
+  padding: 0.4em 0.6em;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.filelist-table thead th {
+  background: #f0f0f0;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+}
+
+.filelist-table th.sortable button {
+  background: none;
+  border: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
+}
+
+.filelist-table th.sortable button:hover {
+  color: #4a90d9;
+}
+
+.filelist-row {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.filelist-row:hover {
+  background: #f5f8fc;
+}
+
+.filelist-row.selected {
+  background: #dce8f5;
+}
+
+.filelist-row.selected:hover {
+  background: #c8daef;
+}
+
+.col-check {
+  width: 2em;
+  text-align: center;
+}
+
+.col-size {
+  white-space: nowrap;
+  text-align: right;
+  width: 6em;
+}
+
+.col-date {
+  white-space: nowrap;
+  width: 10em;
+}
+
+.col-action {
+  white-space: nowrap;
+  width: 8em;
+}
+
+.col-action .btn + .btn {
+  margin-left: 0.3em;
+}
+
+.col-name a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+.col-name a:hover {
+  text-decoration: underline;
+}
+
+.filelist-empty {
+  color: #888;
+  text-align: center;
+  padding: 2em;
+}
+
+.error {
+  color: #e74c3c;
+}
+
+/* === 注意セクション === */
+.notice {
+  border: 1px solid #f0c040;
+  background: #fef9e7;
+  border-radius: 4px;
+  padding: 0.5em 0.8em;
+  margin: 0.5em 0;
+}
+
+.notice em {
+  font-style: normal;
+  color: #856404;
+}
