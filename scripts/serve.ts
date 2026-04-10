@@ -132,6 +132,28 @@ server.beforeRequest((ctx, next) => {
   next();
 });
 
+// Enforce If-None-Match: * on PUT (webdav-server ignores it by default)
+server.beforeRequest((ctx, next) => {
+  const req = ctx.request;
+  const method = req.method ?? "";
+  const url = req.url ?? "/";
+
+  if (method === "PUT" && req.headers["if-none-match"] === "*") {
+    const decodedPath = decodeURIComponent(url);
+    const targetPath = resolve(WEBDAV_ROOT, "." + decodedPath);
+
+    if (existsSync(targetPath)) {
+      const res = ctx.response;
+      res.writeHead(412, "Precondition Failed");
+      res.end();
+      logAccess(method, url, 412, "If-None-Match: * (resource exists)");
+      return;
+    }
+  }
+
+  next();
+});
+
 // Access log: runs after each request is handled
 server.afterRequest((ctx, next) => {
   const req = ctx.request;
