@@ -4,7 +4,7 @@
 // file-list.ts ユニットテスト — DOM 描画、ソート、行選択
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { initFileList } from "../file-list.js";
+import { initFileList, compareNames, splitNameChunks } from "../file-list.js";
 import type { FileInfo } from "../webdav.js";
 
 function makeFiles(): FileInfo[] {
@@ -157,5 +157,149 @@ describe("initFileList", () => {
 
     const deleteBtn = container.querySelector<HTMLButtonElement>(".btn-danger");
     expect(deleteBtn?.disabled).toBe(true);
+  });
+});
+
+describe("splitNameChunks", () => {
+  it("splits mixed text and numbers", () => {
+    expect(splitNameChunks("foo-10.tar.gz")).toEqual(["foo-", 10, ".tar.gz"]);
+  });
+
+  it("splits leading number", () => {
+    expect(splitNameChunks("123abc")).toEqual([123, "abc"]);
+  });
+
+  it("handles pure text", () => {
+    expect(splitNameChunks("readme.txt")).toEqual(["readme.txt"]);
+  });
+
+  it("handles pure number", () => {
+    expect(splitNameChunks("42")).toEqual([42]);
+  });
+
+  it("handles multiple numeric segments", () => {
+    expect(splitNameChunks("v1.2.3")).toEqual(["v", 1, ".", 2, ".", 3]);
+  });
+});
+
+describe("compareNames", () => {
+  describe("version sort enabled (default)", () => {
+    it("sorts version numbers naturally", () => {
+      expect(compareNames("foo-2", "foo-10", false, true)).toBeLessThan(0);
+      expect(compareNames("foo-10", "foo-2", false, true)).toBeGreaterThan(0);
+    });
+
+    it("sorts equal names as equal", () => {
+      expect(compareNames("foo-10", "foo-10", false, true)).toBe(0);
+    });
+
+    it("handles multi-segment versions", () => {
+      const names = ["v1.10.0", "v1.2.3", "v1.2.10", "v2.0.0"];
+      const sorted = [...names].sort((a, b) => compareNames(a, b, false, true));
+      expect(sorted).toEqual(["v1.2.3", "v1.2.10", "v1.10.0", "v2.0.0"]);
+    });
+
+    it("sorts names without numbers lexicographically", () => {
+      expect(compareNames("alpha", "beta", false, true)).toBeLessThan(0);
+    });
+
+    it("handles file extensions with numbers", () => {
+      const names = ["log-1.txt", "log-10.txt", "log-2.txt", "log-9.txt"];
+      const sorted = [...names].sort((a, b) => compareNames(a, b, false, true));
+      expect(sorted).toEqual(["log-1.txt", "log-2.txt", "log-9.txt", "log-10.txt"]);
+    });
+  });
+
+  describe("version sort disabled", () => {
+    it("sorts lexicographically (foo-10 before foo-2)", () => {
+      expect(compareNames("foo-10", "foo-2", false, false)).toBeLessThan(0);
+    });
+  });
+
+  describe("case-insensitive sort", () => {
+    it("treats upper and lower case as equal", () => {
+      expect(compareNames("Alpha", "alpha", true, false)).toBe(0);
+      expect(compareNames("BETA", "beta", true, true)).toBe(0);
+    });
+
+    it("sorts mixed case naturally with sensitivity=base", () => {
+      const names = ["Banana", "apple", "Cherry"];
+      const sorted = [...names].sort((a, b) => compareNames(a, b, true, false));
+      expect(sorted).toEqual(["apple", "Banana", "Cherry"]);
+    });
+  });
+
+  describe("case-sensitive sort (default)", () => {
+    it("sorts uppercase before lowercase (codepoint order)", () => {
+      // Codepoint: R(0x52) < d(0x64), so README < data
+      expect(compareNames("README.txt", "data.csv", false, false)).toBeLessThan(0);
+      expect(compareNames("README.txt", "data.csv", false, true)).toBeLessThan(0);
+    });
+
+    it("distinguishes upper and lower case", () => {
+      expect(compareNames("A", "a", false, false)).not.toBe(0);
+      expect(compareNames("A", "a", false, true)).not.toBe(0);
+    });
+  });
+
+  describe("combined options", () => {
+    it("case-insensitive + version sort", () => {
+      const names = ["File-10.txt", "file-2.txt", "FILE-1.txt"];
+      const sorted = [...names].sort((a, b) => compareNames(a, b, true, true));
+      expect(sorted).toEqual(["FILE-1.txt", "file-2.txt", "File-10.txt"]);
+    });
+  });
+});
+
+describe("initFileList with sort options", () => {
+  let container: HTMLDivElement;
+  let onRefresh: () => void;
+
+  beforeEach(() => {
+    container = document.createElement("div");
+    document.body.appendChild(container);
+    onRefresh = vi.fn() as unknown as () => void;
+  });
+
+  function makeVersionFiles(): FileInfo[] {
+    return [
+      { name: "v1.10.txt", href: "/v1.10.txt", size: 10, lastModified: new Date(0), contentType: "text/plain", isDirectory: false },
+      { name: "v1.2.txt", href: "/v1.2.txt", size: 10, lastModified: new Date(0), contentType: "text/plain", isDirectory: false },
+      { name: "v1.9.txt", href: "/v1.9.txt", size: 10, lastModified: new Date(0), contentType: "text/plain", isDirectory: false },
+    ];
+  }
+
+  it("sorts files with version sort by default", () => {
+    const fl = initFileList({ container, onRefresh });
+    fl.render(makeVersionFiles());
+
+    const names = Array.from(container.querySelectorAll(".col-name a")).map(
+      (a) => a.textContent,
+    );
+    expect(names).toEqual(["v1.2.txt", "v1.9.txt", "v1.10.txt"]);
+  });
+
+  it("sorts lexicographically when sortVersion=false", () => {
+    const fl = initFileList({ container, onRefresh, sortVersion: false });
+    fl.render(makeVersionFiles());
+
+    const names = Array.from(container.querySelectorAll(".col-name a")).map(
+      (a) => a.textContent,
+    );
+    expect(names).toEqual(["v1.10.txt", "v1.2.txt", "v1.9.txt"]);
+  });
+
+  it("sorts case-insensitively when sortIgnoreCase=true", () => {
+    const files: FileInfo[] = [
+      { name: "Banana.txt", href: "/Banana.txt", size: 10, lastModified: new Date(0), contentType: "text/plain", isDirectory: false },
+      { name: "apple.txt", href: "/apple.txt", size: 10, lastModified: new Date(0), contentType: "text/plain", isDirectory: false },
+    ];
+    const fl = initFileList({ container, onRefresh, sortIgnoreCase: true, sortVersion: false });
+    fl.render(files);
+
+    const names = Array.from(container.querySelectorAll(".col-name a")).map(
+      (a) => a.textContent,
+    );
+    expect(names).toEqual(["apple.txt", "Banana.txt"]);
   });
 });

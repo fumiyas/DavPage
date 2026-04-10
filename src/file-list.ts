@@ -10,12 +10,14 @@ import { getViewableMime, openInlineView } from "./viewer.js";
 export interface FileListOptions {
   container: HTMLElement;
   onRefresh: () => void;
+  sortIgnoreCase?: boolean;
+  sortVersion?: boolean;
 }
 
 type SortKey = "name" | "size" | "lastModified";
 type SortDir = "asc" | "desc";
 
-export function initFileList({ container, onRefresh }: FileListOptions) {
+export function initFileList({ container, onRefresh, sortIgnoreCase = false, sortVersion = true }: FileListOptions) {
   const selected = new Set<string>();
   let currentFiles: FileInfo[] = [];
   let sortKey: SortKey = "name";
@@ -56,7 +58,7 @@ export function initFileList({ container, onRefresh }: FileListOptions) {
       let cmp = 0;
       switch (sortKey) {
         case "name":
-          cmp = a.name.localeCompare(b.name, "ja");
+          cmp = compareNames(a.name, b.name, sortIgnoreCase, sortVersion);
           break;
         case "size":
           cmp = a.size - b.size;
@@ -297,6 +299,72 @@ export function initFileList({ container, onRefresh }: FileListOptions) {
   }
 
   return { render };
+}
+
+/**
+ * Split a string into alternating text and numeric segments.
+ * E.g., "foo-10.tar.gz" → ["foo-", 10, ".tar.gz"]
+ */
+export function splitNameChunks(name: string): (string | number)[] {
+  const chunks: (string | number)[] = [];
+  const re = /(\d+)/;
+  for (const part of name.split(re)) {
+    if (part === "") continue;
+    const num = Number(part);
+    chunks.push(Number.isNaN(num) ? part : num);
+  }
+  return chunks;
+}
+
+/** Compare two strings by Unicode codepoint order (like POSIX C locale) */
+function codepointCompare(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/** Compare two file names with optional case-insensitive and version-aware sort */
+export function compareNames(
+  a: string,
+  b: string,
+  ignoreCase: boolean,
+  versionSort: boolean,
+): number {
+  // Case-insensitive: use localeCompare with sensitivity "base"
+  // Case-sensitive: use codepoint order (uppercase before lowercase, like POSIX C locale)
+  const compareStrings = ignoreCase
+    ? (s1: string, s2: string) => s1.localeCompare(s2, undefined, { sensitivity: "base" })
+    : codepointCompare;
+
+  if (!versionSort) {
+    return compareStrings(a, b);
+  }
+
+  // Natural/version sort: compare chunk by chunk
+  const chunksA = splitNameChunks(ignoreCase ? a.toLowerCase() : a);
+  const chunksB = splitNameChunks(ignoreCase ? b.toLowerCase() : b);
+  const len = Math.min(chunksA.length, chunksB.length);
+
+  for (let i = 0; i < len; i++) {
+    const ca = chunksA[i];
+    const cb = chunksB[i];
+
+    // Both numbers — compare numerically
+    if (typeof ca === "number" && typeof cb === "number") {
+      if (ca !== cb) return ca - cb;
+      continue;
+    }
+
+    // Both strings — compare lexicographically
+    if (typeof ca === "string" && typeof cb === "string") {
+      const cmp = compareStrings(ca, cb);
+      if (cmp !== 0) return cmp;
+      continue;
+    }
+
+    // Mixed: number before string
+    return typeof ca === "number" ? -1 : 1;
+  }
+
+  return chunksA.length - chunksB.length;
 }
 
 function formatSize(bytes: number): string {

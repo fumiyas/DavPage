@@ -65,6 +65,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const fileList = initFileList({
     container: fileListContainer,
     onRefresh: () => loadFileList(),
+    sortIgnoreCase: config.index_sort_ignore_case,
+    sortVersion: config.index_sort_version,
   });
 
   // アップロードを初期化

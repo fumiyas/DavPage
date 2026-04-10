@@ -230,3 +230,21 @@ describe("parseConfig index_exclude_names (TOML array)", () => {
     expect(result["index_exclude_names"]).toEqual(["only"]);
   });
 });
+
+describe("parseConfig index_sort options", () => {
+  it("parses index_sort_ignore_case boolean", () => {
+    const result = parseConfig("index_sort_ignore_case = true");
+    expect(result["index_sort_ignore_case"]).toBe(true);
+  });
+
+  it("parses index_sort_version boolean", () => {
+    const result = parseConfig("index_sort_version = false");
+    expect(result["index_sort_version"]).toBe(false);
+  });
+
+  it("defaults: index_sort_ignore_case=false, index_sort_version=true", () => {
+    const cfg = defaultConfig();
+    expect(cfg.index_sort_ignore_case).toBe(false);
+    expect(cfg.index_sort_version).toBe(true);
+  });
+});

@@ -12,6 +12,8 @@ export interface AppConfig {
   delete_enabled: boolean;
   index_exclude_names: string[];
   index_ignore_folders: boolean;
+  index_sort_ignore_case: boolean;
+  index_sort_version: boolean;
 }
 
 const CONFIG_FILE = "davpage.conf";
@@ -27,6 +29,8 @@ export function defaultConfig(): AppConfig {
     delete_enabled: true,
     index_exclude_names: ["index.html"],
     index_ignore_folders: false,
+    index_sort_ignore_case: false,
+    index_sort_version: true,
   };
 }
 
@@ -255,6 +259,12 @@ function buildConfig(
   }
   if (typeof parsed["index_ignore_folders"] === "boolean") {
     cfg.index_ignore_folders = parsed["index_ignore_folders"];
+  }
+  if (typeof parsed["index_sort_ignore_case"] === "boolean") {
+    cfg.index_sort_ignore_case = parsed["index_sort_ignore_case"];
+  }
+  if (typeof parsed["index_sort_version"] === "boolean") {
+    cfg.index_sort_version = parsed["index_sort_version"];
   }
 
   return cfg;

@@ -53,6 +53,12 @@ function setupTestFiles(): void {
       "# Hide sub-folders from the file list",
       "# index_ignore_folders = false",
       "",
+      "# Sort file names case-insensitively",
+      "# index_sort_ignore_case = false",
+      "",
+      "# Sort file names with version/natural order (e.g., foo-2 before foo-10)",
+      "# index_sort_version = true",
+      "",
     ].join("\n"),
   };
 
