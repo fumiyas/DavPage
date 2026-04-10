@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // SPDX-FileCopyrightText: 2026 SATOH Fumiyasu @ OSSTech Corp., Japan
 
-// エントリーポイント: 初期化とコンポーネント接続
+// Entry point: initialization and component wiring
 
 import { listFiles } from "./webdav.js";
 import { initUpload } from "./upload.js";
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const baseUrl = window.location.href;
 
-  // ファイル一覧を初期化
+  // Initialize file list
   const fileList = initFileList({
     container: fileListContainer,
     onRefresh: () => loadFileList(),
@@ -69,14 +69,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     sortVersion: config.index_sort_version,
   });
 
-  // アップロードを初期化
+  // Initialize upload
   initUpload({
     container: uploadContainer,
     targetUrl: baseUrl,
     onAllComplete: () => loadFileList(),
   });
 
-  // ファイル一覧の読み込み
+  // Load file list
   async function loadFileList(): Promise<void> {
     try {
       const allFiles = await listFiles(baseUrl);

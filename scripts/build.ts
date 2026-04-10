@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // SPDX-FileCopyrightText: 2026 SATOH Fumiyasu @ OSSTech Corp., Japan
 
-// ビルドスクリプト: esbuild で TS/CSS をバンドルし、単一 HTML ファイルを出力
+// Build script: bundle TS/CSS with esbuild into a single HTML file
 
 import * as esbuild from "esbuild";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -39,7 +39,7 @@ async function build(): Promise<void> {
   });
   const cssCode = cssResult.outputFiles[0].text;
 
-  // HTML テンプレートに埋め込み
+  // Embed into HTML template
   // Use split/join instead of replace to avoid $ replacement patterns in JS code
   const htmlTemplate = readFileSync(resolve(SRC, "index.html"), "utf-8");
   const html = htmlTemplate
@@ -58,7 +58,7 @@ if (isWatch) {
   // 初回ビルド
   await build();
 
-  // src/ を監視して再ビルド
+  // Watch src/ and rebuild
   const { watch } = await import("node:fs");
   watch(SRC, { recursive: true }, async (_event, filename) => {
     if (!filename) return;

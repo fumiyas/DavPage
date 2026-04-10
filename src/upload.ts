@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // SPDX-FileCopyrightText: 2026 SATOH Fumiyasu @ OSSTech Corp., Japan
 
-// 複数ファイルアップロード UI & ロジック
+// Multi-file upload UI and logic
 
 import { uploadFile } from "./webdav.js";
 

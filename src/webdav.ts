@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // SPDX-FileCopyrightText: 2026 SATOH Fumiyasu @ OSSTech Corp., Japan
 
-// WebDAV クライアント
-// PROPFIND, PUT, DELETE 操作
+// WebDAV client
+// PROPFIND, PUT, DELETE operations
 
 export interface FileInfo {
   name: string;
@@ -25,17 +25,17 @@ function findByNS(parent: Element | Document, localName: string): Element[] {
   const byNS = parent.getElementsByTagNameNS(DAV_NS, localName);
   if (byNS.length > 0) return Array.from(byNS);
 
-  // フォールバック: よくある DAV プレフィクスを試行
+  // Fallback: try common DAV prefixes
   for (const prefix of DAV_PREFIXES) {
     const byTag = parent.getElementsByTagName(`${prefix}:${localName}`);
     if (byTag.length > 0) return Array.from(byTag);
   }
-  // プレフィクスなしも試行
+  // Also try without prefix
   const byLocal = parent.getElementsByTagName(localName);
   return Array.from(byLocal);
 }
 
-/** PROPFIND でディレクトリ内のリソース一覧を取得 */
+/** List resources in a directory via PROPFIND */
 export async function listFiles(dirUrl: string): Promise<FileInfo[]> {
   const url = dirUrl.endsWith("/") ? dirUrl : dirUrl + "/";
 
@@ -73,7 +73,7 @@ function parsePropfindResponse(xml: string, baseUrl: string): FileInfo[] {
 
     const href = decodeURIComponent(hrefEl.textContent);
 
-    // ベースディレクトリ自身をスキップ
+    // Skip the base directory itself
     const basePath = new URL(baseUrl, location.origin).pathname;
     const resourcePath = new URL(href, location.origin).pathname;
     if (resourcePath === basePath) continue;
@@ -112,7 +112,7 @@ function parsePropfindResponse(xml: string, baseUrl: string): FileInfo[] {
   return files;
 }
 
-/** ファイルアップロード（プログレスコールバック付き） */
+/** Upload a file (with progress callback) */
 export function uploadFile(
   destUrl: string,
   file: File,
@@ -141,13 +141,13 @@ export function uploadFile(
   });
 }
 
-/** ファイル削除 */
+/** Delete a resource */
 export async function deleteResource(resourceUrl: string): Promise<{ status: number; statusText: string }> {
   const res = await fetch(resourceUrl, { method: "DELETE" });
   return { status: res.status, statusText: res.statusText };
 }
 
-/** ファイルを Blob として取得（インライン表示用） */
+/** Fetch a file as a Blob (for inline viewing) */
 export async function fetchAsBlob(fileUrl: string, mimeType: string): Promise<Blob> {
   const res = await fetch(fileUrl);
   if (!res.ok) {

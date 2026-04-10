@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // SPDX-FileCopyrightText: 2026 SATOH Fumiyasu @ OSSTech Corp., Japan
 
-// 結合テスト — webdav-server による実 WebDAV 通信テスト
+// Integration tests — real WebDAV communication via webdav-server
 // @vitest-environment node
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
@@ -23,7 +23,7 @@ function stopServer(srv: InstanceType<typeof webdav.WebDAVServer>): Promise<void
   });
 }
 
-/** 生の HTTP リクエスト送信（PROPFIND 等のカスタムメソッド対応） */
+/** Send a raw HTTP request (supports custom methods like PROPFIND) */
 function rawRequest(
   url: string,
   method: string,

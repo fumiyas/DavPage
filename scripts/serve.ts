@@ -14,7 +14,7 @@ const ROOT = resolve(__dirname, "..");
 const WEBDAV_ROOT = resolve(ROOT, "tmp", "webdav");
 const PORT = parseInt(process.argv[2] ?? "18080", 10);
 
-// テスト用ディレクトリとファイルを作成
+// Create test directory and sample files
 function setupTestFiles(): void {
   const dirs = [
     WEBDAV_ROOT,
@@ -75,7 +75,7 @@ function setupTestFiles(): void {
 
 setupTestFiles();
 
-// dist/index.html を WebDAV ルートにコピー
+// Copy dist/index.html to WebDAV root
 const srcIndex = resolve(ROOT, "dist", "index.html");
 const dstIndex = resolve(WEBDAV_ROOT, "index.html");
 if (existsSync(srcIndex)) {

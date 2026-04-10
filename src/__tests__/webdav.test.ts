@@ -90,7 +90,7 @@ describe("listFiles", () => {
 
     const files = await listFiles("http://localhost/dav/folder/");
 
-    // ベースディレクトリ自身はスキップされる
+    // The base directory itself should be skipped
     expect(files).toHaveLength(3);
 
     // ファイル

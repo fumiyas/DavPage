@@ -147,7 +147,7 @@ describe("initFileList", () => {
 
     const rows = container.querySelectorAll("tbody tr");
     expect(rows.length).toBe(3);
-    // ディレクトリは常に先頭
+    // Directories always come first
     expect(rows[0].querySelector(".col-name a")?.textContent).toBe("subdir/");
   });
 

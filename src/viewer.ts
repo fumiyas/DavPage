@@ -5,7 +5,7 @@
 
 import { fetchAsBlob } from "./webdav.js";
 
-/** インライン表示可能な MIME タイプのマッピング */
+/** MIME type mapping for inline-viewable file types */
 const VIEWABLE_EXTENSIONS: Record<string, string> = {
   // PDF
   ".pdf": "application/pdf",
@@ -48,7 +48,7 @@ const VIEWABLE_EXTENSIONS: Record<string, string> = {
   ".flac": "audio/flac",
 };
 
-/** ファイル名からインライン表示用 MIME タイプを取得（非対応なら null） */
+/** Get inline-viewable MIME type from filename (returns null if not supported) */
 export function getViewableMime(fileName: string): string | null {
   const dot = fileName.lastIndexOf(".");
   if (dot < 0) return null;
@@ -56,7 +56,7 @@ export function getViewableMime(fileName: string): string | null {
   return VIEWABLE_EXTENSIONS[ext] ?? null;
 }
 
-/** ファイルをインライン表示（新タブ） */
+/** Open a file inline in a new tab */
 export async function openInlineView(fileUrl: string, fileName: string): Promise<void> {
   const mime = getViewableMime(fileName);
   if (!mime) {
@@ -67,6 +67,6 @@ export async function openInlineView(fileUrl: string, fileName: string): Promise
   const blobUrl = URL.createObjectURL(blob);
   window.open(blobUrl, "_blank");
 
-  // メモリリーク防止: 少し待ってから revoke
+  // Prevent memory leak: revoke after a short delay
   setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
 }

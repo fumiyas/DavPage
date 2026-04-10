@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // SPDX-FileCopyrightText: 2026 SATOH Fumiyasu @ OSSTech Corp., Japan
 
-// ファイル一覧 UI（レンダリング、ソート、行選択、アクション）
+// File list UI (rendering, sorting, row selection, actions)
 
 import type { FileInfo } from "./webdav.js";
 import { deleteResource } from "./webdav.js";
@@ -53,7 +53,7 @@ export function initFileList({ container, onRefresh, sortIgnoreCase = false, sor
     updateSelectionUI();
 
     const sorted = [...files].sort((a, b) => {
-      // ディレクトリを常に先頭
+      // Directories always come first
       if (a.isDirectory !== b.isDirectory) return a.isDirectory ? -1 : 1;
       let cmp = 0;
       switch (sortKey) {
@@ -164,7 +164,7 @@ export function initFileList({ container, onRefresh, sortIgnoreCase = false, sor
         dlBtn.addEventListener("click", (e) => e.stopPropagation());
         tdAction.appendChild(dlBtn);
 
-        // インライン表示ボタン（対応タイプのみ）
+        // Inline view button (for supported types only)
         if (getViewableMime(file.name)) {
           const viewBtn = document.createElement("button");
           viewBtn.type = "button";
@@ -185,7 +185,7 @@ export function initFileList({ container, onRefresh, sortIgnoreCase = false, sor
 
       tr.append(tdCheck, tdName, tdSize, tdDate, tdAction);
 
-      // 行クリックで選択トグル
+      // Row click to toggle selection
       if (deleteEnabled) {
         tr.addEventListener("click", () => {
           const nowSelected = !selected.has(file.href);
