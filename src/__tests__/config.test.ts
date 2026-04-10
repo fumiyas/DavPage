@@ -231,6 +231,17 @@ describe("parseConfig index_exclude_names (TOML array)", () => {
   });
 });
 
+describe("parseConfig index_ignore_dot_names", () => {
+  it("parses index_ignore_dot_names boolean", () => {
+    expect(parseConfig("index_ignore_dot_names = false")["index_ignore_dot_names"]).toBe(false);
+    expect(parseConfig("index_ignore_dot_names = true")["index_ignore_dot_names"]).toBe(true);
+  });
+
+  it("defaults to true", () => {
+    expect(defaultConfig().index_ignore_dot_names).toBe(true);
+  });
+});
+
 describe("parseConfig index_sort options", () => {
   it("parses index_sort_ignore_case boolean", () => {
     const result = parseConfig("index_sort_ignore_case = true");

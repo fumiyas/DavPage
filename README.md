@@ -111,6 +111,9 @@ delete_enabled = true
 # Glob patterns to exclude from the file list
 index_exclude_names = ["index.html", "davpage.conf", ".ht*"]
 
+# Hide dot-files and dot-folders (names starting with ".") from the file list
+index_ignore_dot_names = true
+
 # Hide sub-folders from the file list
 index_ignore_folders = false
 
