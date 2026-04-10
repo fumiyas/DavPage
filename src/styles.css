@@ -370,3 +370,58 @@ pre {
   font-style: normal;
   color: #856404;
 }
+
+/* === Notification banners === */
+.davpage-notifications {
+  margin-bottom: 0.8em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.davpage-notification {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6em;
+  padding: 0.5em 0.8em;
+  border-radius: 4px;
+}
+
+.davpage-notification-error {
+  background: #fde8e6;
+  border: 1px solid #e74c3c;
+  color: #c0392b;
+}
+
+.davpage-notification-text {
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.davpage-notification-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  line-height: 1;
+  color: inherit;
+  padding: 0 0.2em;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.davpage-notification-close:hover {
+  opacity: 1;
+}
+
+/* === Upload overwrite option === */
+.upload-overwrite-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  font-size: 0.9em;
+  color: #555;
+  cursor: pointer;
+  user-select: none;
+}

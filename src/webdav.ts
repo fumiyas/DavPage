@@ -113,10 +113,16 @@ function parsePropfindResponse(xml: string, baseUrl: string): FileInfo[] {
 }
 
 /** Upload a file (with progress callback) */
+export interface UploadOptions {
+  onProgress?: (loaded: number, total: number) => void;
+  /** When false, sends If-None-Match: * header to prevent overwriting (default: false) */
+  overwrite?: boolean;
+}
+
 export function uploadFile(
   destUrl: string,
   file: File,
-  onProgress?: (loaded: number, total: number) => void,
+  options?: UploadOptions,
 ): Promise<{ status: number; statusText: string }> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -125,9 +131,14 @@ export function uploadFile(
     xhr.open("PUT", url + encodeURIComponent(safeName), true);
     xhr.overrideMimeType("application/octet-stream");
 
-    if (onProgress) {
+    // No overwrite: If-None-Match: * causes 412 if the resource already exists
+    if (!options?.overwrite) {
+      xhr.setRequestHeader("If-None-Match", "*");
+    }
+
+    if (options?.onProgress) {
       xhr.upload.addEventListener("progress", (e) => {
-        if (e.lengthComputable) onProgress(e.loaded, e.total);
+        if (e.lengthComputable) options.onProgress!(e.loaded, e.total);
       });
     }
 

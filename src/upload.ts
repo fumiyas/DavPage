@@ -4,6 +4,7 @@
 // Multi-file upload UI and logic
 
 import { uploadFile } from "./webdav.js";
+import { showError } from "./notifications.js";
 
 export interface UploadManagerOptions {
   container: HTMLElement;
@@ -51,7 +52,18 @@ export function initUpload({ container, targetUrl, onAllComplete }: UploadManage
   clearBtn.className = "btn";
   clearBtn.disabled = true;
 
-  controls.append(uploadBtn, clearBtn);
+  // Overwrite checkbox
+  const overwriteLabel = document.createElement("label");
+  overwriteLabel.className = "upload-overwrite-label";
+
+  const overwriteCheckbox = document.createElement("input");
+  overwriteCheckbox.type = "checkbox";
+  overwriteCheckbox.className = "upload-overwrite-checkbox";
+  overwriteCheckbox.checked = false; // Default: no overwrite
+
+  overwriteLabel.append(overwriteCheckbox, " 既存ファイルを上書き");
+
+  controls.append(uploadBtn, clearBtn, overwriteLabel);
 
   const progressArea = document.createElement("div");
   progressArea.className = "upload-progress hidden";
@@ -151,6 +163,7 @@ export function initUpload({ container, targetUrl, onAllComplete }: UploadManage
   async function startUpload(): Promise<void> {
     if (queue.length === 0) return;
 
+    const overwrite = overwriteCheckbox.checked;
     const filesToUpload = [...queue];
     queue.length = 0;
 
@@ -187,24 +200,32 @@ export function initUpload({ container, targetUrl, onAllComplete }: UploadManage
 
       try {
         statusSpan.textContent = "アップロード中…";
-        const result = await uploadFile(targetUrl, item.file, (loaded, fileTotal) => {
-          const pct = (loaded / fileTotal) * 100;
-          bar.value = pct;
+        const result = await uploadFile(targetUrl, item.file, {
+          overwrite,
+          onProgress: (loaded, fileTotal) => {
+            bar.value = (loaded / fileTotal) * 100;
+          },
         });
 
-        if (result.status === 201 || result.status === 204) {
+        if (result.status === 200 || result.status === 201 || result.status === 204) {
           bar.value = 100;
           statusSpan.textContent = "✓ 完了";
           li.classList.add("done");
         } else {
+          const msg = result.status === 412
+            ? `「${item.file.name}」は既に存在します。上書きするには「既存ファイルを上書き」をオンにしてください。`
+            : `「${item.file.name}」のアップロードに失敗しました (HTTP ${result.status})`;
           statusSpan.textContent = `✗ エラー (${result.status})`;
           li.classList.add("error");
           hasError = true;
+          showError(msg);
         }
-      } catch {
+      } catch (err) {
+        const msg = `「${item.file.name}」のアップロードに失敗しました: ${err instanceof Error ? err.message : String(err)}`;
         statusSpan.textContent = "✗ ネットワークエラー";
         li.classList.add("error");
         hasError = true;
+        showError(msg);
       }
 
       completed++;

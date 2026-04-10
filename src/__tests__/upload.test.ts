@@ -51,6 +51,18 @@ describe("initUpload", () => {
     }
   });
 
+  it("上書きチェックボックスが存在しデフォルトはオフ", () => {
+    initUpload({
+      container,
+      targetUrl: "http://localhost/dav/",
+      onAllComplete: () => {},
+    });
+
+    const cb = container.querySelector<HTMLInputElement>(".upload-overwrite-checkbox");
+    expect(cb).not.toBeNull();
+    expect(cb?.checked).toBe(false);
+  });
+
   it("ドロップゾーンクリックで file input をトリガーする", () => {
     initUpload({
       container,

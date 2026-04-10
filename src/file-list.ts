@@ -6,6 +6,7 @@
 import type { FileInfo } from "./webdav.js";
 import { deleteResource } from "./webdav.js";
 import { getViewableMime, openInlineView } from "./viewer.js";
+import { showError } from "./notifications.js";
 
 export interface FileListOptions {
   container: HTMLElement;
@@ -291,7 +292,7 @@ export function initFileList({ container, onRefresh, sortIgnoreCase = false, sor
     });
 
     if (errors.length > 0) {
-      alert(`一部の削除でエラーが発生しました:\n\n${errors.join("\n")}`);
+      showError(`削除でエラーが発生しました:\n${errors.join("\n")}`);
     }
 
     selected.clear();
