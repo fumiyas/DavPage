@@ -28,7 +28,7 @@ export function defaultConfig(): AppConfig {
     footer: "",
     upload_enabled: true,
     delete_enabled: true,
-    index_exclude_names: ["index.html"],
+    index_exclude_names: ["davpage.*", "index.htm*", ".ht*"],
     index_ignore_dot_names: true,
     index_ignore_folders: false,
     index_sort_ignore_case: false,

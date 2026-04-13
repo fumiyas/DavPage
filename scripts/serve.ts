@@ -48,7 +48,7 @@ function setupTestFiles(): void {
       "# delete_enabled = true",
       "",
       "# Glob patterns to exclude from the file list (TOML string array)",
-      '# index_exclude_names = ["index.html", "davpage.conf", ".ht*"]',
+      '# index_exclude_names = ["davpage.*", "index.htm*", ".ht*"]',
       "",
       "# Hide dot-files and dot-folders (names starting with \".\")",
       "# index_ignore_dot_names = true",
