@@ -46,7 +46,7 @@ describe("initFileList", () => {
     onRefresh = vi.fn() as unknown as () => void;
   });
 
-  it("ファイル一覧をテーブルとして描画する", () => {
+  it("renders file list as a table", () => {
     const fl = initFileList({ container, onRefresh });
     fl.render(makeFiles());
 
@@ -57,7 +57,7 @@ describe("initFileList", () => {
     expect(rows).toHaveLength(3);
   });
 
-  it("ディレクトリを先頭に配置する", () => {
+  it("places directories before files", () => {
     const fl = initFileList({ container, onRefresh });
     fl.render(makeFiles());
 
@@ -66,7 +66,7 @@ describe("initFileList", () => {
     expect(firstRowName).toBe("subdir/");
   });
 
-  it("行クリックで選択トグルする", () => {
+  it("toggles selection on row click", () => {
     const fl = initFileList({ container, onRefresh });
     fl.render(makeFiles());
 
@@ -78,7 +78,7 @@ describe("initFileList", () => {
     expect(row.classList.contains("selected")).toBe(false);
   });
 
-  it("チェックボックス操作で選択トグルする", () => {
+  it("toggles selection on checkbox change", () => {
     const fl = initFileList({ container, onRefresh });
     fl.render(makeFiles());
 
@@ -90,7 +90,7 @@ describe("initFileList", () => {
     expect(row.classList.contains("selected")).toBe(true);
   });
 
-  it("選択件数が表示される", () => {
+  it("shows selected count", () => {
     const fl = initFileList({ container, onRefresh });
     fl.render(makeFiles());
 
@@ -102,7 +102,7 @@ describe("initFileList", () => {
     expect(countEl?.textContent).toContain("2");
   });
 
-  it("PDF ファイルに表示ボタンがある", () => {
+  it("shows view button for PDF files", () => {
     const fl = initFileList({ container, onRefresh });
     fl.render(makeFiles());
 
@@ -116,7 +116,7 @@ describe("initFileList", () => {
     expect(viewBtn?.textContent).toBe("表示");
   });
 
-  it("ディレクトリにはダウンロード・表示ボタンがない", () => {
+  it("does not show download/view buttons for directories", () => {
     const fl = initFileList({ container, onRefresh });
     fl.render(makeFiles());
 
@@ -128,7 +128,7 @@ describe("initFileList", () => {
     expect(actionBtns).toHaveLength(0);
   });
 
-  it("空一覧ではメッセージを表示する", () => {
+  it("shows empty message for no files", () => {
     const fl = initFileList({ container, onRefresh });
     fl.render([]);
 
@@ -137,7 +137,7 @@ describe("initFileList", () => {
     expect(empty?.textContent).toContain("ファイルがありません");
   });
 
-  it("ソートヘッダークリックで再描画する", () => {
+  it("re-renders on sort header click", () => {
     const fl = initFileList({ container, onRefresh });
     fl.render(makeFiles());
 
@@ -151,7 +151,7 @@ describe("initFileList", () => {
     expect(rows[0].querySelector(".col-name a")?.textContent).toBe("subdir/");
   });
 
-  it("削除ボタンは選択がないと無効", () => {
+  it("disables delete button when nothing is selected", () => {
     const fl = initFileList({ container, onRefresh });
     fl.render(makeFiles());
 

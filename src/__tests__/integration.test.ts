@@ -52,7 +52,7 @@ function rawRequest(
   });
 }
 
-describe("WebDAV 結合テスト", () => {
+describe("WebDAV integration tests", () => {
   beforeAll(async () => {
     server = new webdav.WebDAVServer();
     await startServer(server, 0);
@@ -69,7 +69,7 @@ describe("WebDAV 結合テスト", () => {
     if (server) await stopServer(server);
   });
 
-  it("PUT でファイルをアップロードし PROPFIND で確認できる", async () => {
+  it("uploads a file with PUT and confirms via PROPFIND", async () => {
     const fileContent = "Hello, WebDAV!";
     const putRes = await rawRequest(
       `${baseUrl}/test-file.txt`,
@@ -101,7 +101,7 @@ describe("WebDAV 結合テスト", () => {
     expect(propfindRes.body).toContain("test-file.txt");
   });
 
-  it("PUT したファイルを GET で取得できる", async () => {
+  it("retrieves an uploaded file with GET", async () => {
     const content = "GET test content";
     await rawRequest(
       `${baseUrl}/get-test.txt`,
@@ -115,7 +115,7 @@ describe("WebDAV 結合テスト", () => {
     expect(getRes.body).toBe(content);
   });
 
-  it("DELETE でファイルを削除できる", async () => {
+  it("deletes a file with DELETE", async () => {
     await rawRequest(
       `${baseUrl}/to-delete.txt`,
       "PUT",
@@ -130,7 +130,7 @@ describe("WebDAV 結合テスト", () => {
     expect(getRes.status).toBe(404);
   });
 
-  it("PROPFIND レスポンスが有効な XML を返す", async () => {
+  it("returns valid XML from PROPFIND response", async () => {
     const res = await rawRequest(
       `${baseUrl}/`,
       "PROPFIND",
@@ -156,7 +156,7 @@ describe("WebDAV 結合テスト", () => {
     expect(res.body).toContain("href");
   });
 
-  it("MKCOL でディレクトリを作成できる", async () => {
+  it("creates a directory with MKCOL", async () => {
     const mkcolRes = await rawRequest(`${baseUrl}/new-dir/`, "MKCOL");
     expect([200, 201]).toContain(mkcolRes.status);
 

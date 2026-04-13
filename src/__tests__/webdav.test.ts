@@ -81,7 +81,7 @@ describe("listFiles", () => {
     vi.restoreAllMocks();
   });
 
-  it("PROPFIND レスポンス XML を正しくパースする", async () => {
+  it("parses PROPFIND response XML correctly", async () => {
     vi.mocked(fetch).mockResolvedValueOnce({
       ok: true,
       status: 207,
@@ -113,7 +113,7 @@ describe("listFiles", () => {
     expect(jpFile!.contentType).toBe("text/plain");
   });
 
-  it("空のディレクトリの場合は空配列を返す", async () => {
+  it("returns empty array for empty directory", async () => {
     const emptyXml = `<?xml version="1.0" encoding="utf-8"?>
 <D:multistatus xmlns:D="DAV:">
   <D:response>
@@ -137,7 +137,7 @@ describe("listFiles", () => {
     expect(files).toHaveLength(0);
   });
 
-  it("PROPFIND が失敗した場合はエラーをスローする", async () => {
+  it("throws error when PROPFIND fails", async () => {
     vi.mocked(fetch).mockResolvedValueOnce({
       ok: false,
       status: 403,
@@ -150,7 +150,7 @@ describe("listFiles", () => {
     );
   });
 
-  it("PROPFIND リクエストに正しいヘッダーを送信する", async () => {
+  it("sends correct headers in PROPFIND request", async () => {
     vi.mocked(fetch).mockResolvedValueOnce({
       ok: true,
       status: 207,
@@ -183,7 +183,7 @@ describe("deleteResource", () => {
     vi.restoreAllMocks();
   });
 
-  it("DELETE リクエストを送信して結果を返す", async () => {
+  it("sends DELETE request and returns result", async () => {
     vi.mocked(fetch).mockResolvedValueOnce({
       status: 204,
       statusText: "No Content",
