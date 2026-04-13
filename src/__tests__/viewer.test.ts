@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // SPDX-FileCopyrightText: 2026 SATOH Fumiyasu @ OSSTech Corp., Japan
 
-// viewer.ts ユニットテスト — MIME 判定ロジック
+// Unit tests for viewer.ts — MIME type detection
 
 import { describe, it, expect } from "vitest";
 import { getViewableMime } from "../viewer.js";
@@ -16,17 +16,26 @@ describe("getViewableMime", () => {
     expect(getViewableMime("photo.png")).toBe("image/png");
     expect(getViewableMime("photo.jpg")).toBe("image/jpeg");
     expect(getViewableMime("photo.jpeg")).toBe("image/jpeg");
-    expect(getViewableMime("icon.svg")).toBe("image/svg+xml");
     expect(getViewableMime("photo.webp")).toBe("image/webp");
     expect(getViewableMime("photo.gif")).toBe("image/gif");
   });
 
-  it("テキスト系ファイルを認識する", () => {
-    expect(getViewableMime("readme.txt")).toBe("text/plain");
-    expect(getViewableMime("data.csv")).toBe("text/csv");
-    expect(getViewableMime("page.html")).toBe("text/html");
-    expect(getViewableMime("config.json")).toBe("application/json");
-    expect(getViewableMime("script.js")).toBe("text/javascript");
+  it("SVG を text/plain として返す (XSS 防止)", () => {
+    expect(getViewableMime("icon.svg")).toBe("text/plain; charset=utf-8");
+  });
+
+  it("HTML/HTM を text/plain として返す (XSS 防止)", () => {
+    expect(getViewableMime("page.html")).toBe("text/plain; charset=utf-8");
+    expect(getViewableMime("page.htm")).toBe("text/plain; charset=utf-8");
+  });
+
+  it("テキスト系ファイルに charset=utf-8 が付与される", () => {
+    expect(getViewableMime("readme.txt")).toBe("text/plain; charset=utf-8");
+    expect(getViewableMime("data.csv")).toBe("text/csv; charset=utf-8");
+    expect(getViewableMime("config.json")).toBe("application/json; charset=utf-8");
+    expect(getViewableMime("script.js")).toBe("text/plain; charset=utf-8");
+    expect(getViewableMime("style.css")).toBe("text/plain; charset=utf-8");
+    expect(getViewableMime("app.py")).toBe("text/plain; charset=utf-8");
   });
 
   it("動画・音声ファイルを認識する", () => {

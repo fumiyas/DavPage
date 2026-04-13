@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // SPDX-FileCopyrightText: 2026 SATOH Fumiyasu @ OSSTech Corp., Japan
 
-// インライン表示（PDF, 画像, テキスト, 動画/音声）
+// Inline viewer (PDF, images, text, video/audio)
+// HTML/SVG are rendered as text/plain to prevent XSS via embedded scripts.
 
 import { fetchAsBlob } from "./webdav.js";
 
@@ -9,39 +10,41 @@ import { fetchAsBlob } from "./webdav.js";
 const VIEWABLE_EXTENSIONS: Record<string, string> = {
   // PDF
   ".pdf": "application/pdf",
-  // 画像
+  // Images
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",
   ".gif": "image/gif",
-  ".svg": "image/svg+xml",
   ".webp": "image/webp",
   ".bmp": "image/bmp",
   ".ico": "image/x-icon",
-  // テキスト
-  ".txt": "text/plain",
-  ".csv": "text/csv",
-  ".html": "text/html",
-  ".htm": "text/html",
-  ".xml": "text/xml",
-  ".json": "application/json",
-  ".md": "text/markdown",
-  ".log": "text/plain",
-  ".yml": "text/yaml",
-  ".yaml": "text/yaml",
-  ".ini": "text/plain",
-  ".conf": "text/plain",
-  ".cfg": "text/plain",
-  ".sh": "text/x-shellscript",
-  ".py": "text/x-python",
-  ".js": "text/javascript",
-  ".ts": "text/typescript",
-  ".css": "text/css",
-  // 動画
+  // SVG rendered as plain text to prevent XSS via embedded scripts
+  ".svg": "text/plain; charset=utf-8",
+  // HTML/HTM rendered as plain text to prevent XSS via embedded scripts
+  ".html": "text/plain; charset=utf-8",
+  ".htm": "text/plain; charset=utf-8",
+  // Text
+  ".txt": "text/plain; charset=utf-8",
+  ".csv": "text/csv; charset=utf-8",
+  ".xml": "text/xml; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".md": "text/markdown; charset=utf-8",
+  ".log": "text/plain; charset=utf-8",
+  ".yml": "text/yaml; charset=utf-8",
+  ".yaml": "text/yaml; charset=utf-8",
+  ".ini": "text/plain; charset=utf-8",
+  ".conf": "text/plain; charset=utf-8",
+  ".cfg": "text/plain; charset=utf-8",
+  ".sh": "text/plain; charset=utf-8",
+  ".py": "text/plain; charset=utf-8",
+  ".js": "text/plain; charset=utf-8",
+  ".ts": "text/plain; charset=utf-8",
+  ".css": "text/plain; charset=utf-8",
+  // Video
   ".mp4": "video/mp4",
   ".webm": "video/webm",
   ".ogv": "video/ogg",
-  // 音声
+  // Audio
   ".mp3": "audio/mpeg",
   ".ogg": "audio/ogg",
   ".wav": "audio/wav",

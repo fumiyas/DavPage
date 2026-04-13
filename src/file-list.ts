@@ -177,7 +177,7 @@ export function initFileList({ container, onRefresh, sortIgnoreCase = false, sor
             try {
               await openInlineView(file.href, file.name);
             } catch (err) {
-              alert(`表示エラー: ${err instanceof Error ? err.message : err}`);
+              showError(`表示エラー: ${err instanceof Error ? err.message : err}`);
             }
           });
           tdAction.appendChild(viewBtn);
