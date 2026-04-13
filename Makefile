@@ -9,8 +9,8 @@ NPM := npm
 # Port for the test WebDAV server
 SERVE_PORT := 18080
 
-.default-target: build
-.PHONY: .default-target
+default: build
+.PHONY: default
 
 # ============================================================
 # Targets
