@@ -27,10 +27,11 @@ function applyConfig(config: AppConfig): void {
 
   // Footer
   const customFooter = document.getElementById("custom-footer");
-  const defaultFooter = document.getElementById("default-footer");
-  if (config.footer && customFooter && defaultFooter) {
+  if (config.footer && customFooter) {
     customFooter.innerHTML = config.footer;
-    defaultFooter.classList.add("hidden");
+    // Hide default footer if present
+    const defaultFooter = document.getElementById("default-footer");
+    if (defaultFooter) defaultFooter.classList.add("hidden");
   }
 
   // Upload enabled/disabled
