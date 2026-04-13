@@ -92,10 +92,10 @@ booleans, string arrays, and `#` comments.
 
 ```toml
 # Page title (supports placeholder variables)
-title = "File Exchange — ${dirName}"
+title = "File Exchange — ${folderName}"
 
 # Heading (defaults to title if omitted)
-heading = "Shared Files: ${dirName}"
+heading = "Shared Files: ${folderName}"
 
 # Footer HTML (replaces the default notice)
 footer = """
@@ -127,11 +127,11 @@ index_sort_version = true
 
 ### Placeholder Variables
 
-| Variable      | Description                                      |
-| ------------- | ------------------------------------------------ |
-| `${baseUrl}`  | URL without the path (scheme + host + port)      |
-| `${dirName}`  | Last path segment (parent directory name)        |
-| `${path}`     | Full URL path                                    |
+| Variable        | Description                                      |
+| --------------- | ------------------------------------------------ |
+| `${baseUrl}`    | URL without the path (scheme + host + port)      |
+| `${folderName}` | Last path segment (parent directory name)        |
+| `${path}`       | Full URL path                                    |
 
 ### Caching
 

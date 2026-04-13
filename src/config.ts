@@ -208,7 +208,7 @@ export function matchesAnyPattern(name: string, patterns: string[]): boolean {
 
 export interface PlaceholderVars {
   baseUrl: string;
-  dirName: string;
+  folderName: string;
   path: string;
 }
 
@@ -217,18 +217,18 @@ export function getPlaceholderVars(): PlaceholderVars {
   const loc = window.location;
   const baseUrl = `${loc.protocol}//${loc.host}`;
   const path = decodeURIComponent(loc.pathname);
-  // dirName: last non-empty segment of the path
+  // folderName: last non-empty segment of the path
   const segments = path.replace(/\/$/, "").split("/");
-  const dirName = segments[segments.length - 1] || "";
+  const folderName = segments[segments.length - 1] || "";
 
-  return { baseUrl, dirName, path };
+  return { baseUrl, folderName, path };
 }
 
 /** Expand `${var}` placeholders in a string */
 export function expandPlaceholders(template: string, vars: PlaceholderVars): string {
   return template
     .replace(/\$\{baseUrl\}/g, vars.baseUrl)
-    .replace(/\$\{dirName\}/g, vars.dirName)
+    .replace(/\$\{folderName\}/g, vars.folderName)
     .replace(/\$\{path\}/g, vars.path);
 }
 

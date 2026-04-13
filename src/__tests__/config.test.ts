@@ -86,7 +86,7 @@ upload_enabled = true
 describe("expandPlaceholders", () => {
   const vars: PlaceholderVars = {
     baseUrl: "https://example.com",
-    dirName: "shared-files",
+    folderName: "shared-files",
     path: "/dav/shared-files/",
   };
 
@@ -96,8 +96,8 @@ describe("expandPlaceholders", () => {
     );
   });
 
-  it("expands ${dirName}", () => {
-    expect(expandPlaceholders("Folder: ${dirName}", vars)).toBe(
+  it("expands ${folderName}", () => {
+    expect(expandPlaceholders("Folder: ${folderName}", vars)).toBe(
       "Folder: shared-files",
     );
   });
@@ -109,7 +109,7 @@ describe("expandPlaceholders", () => {
   });
 
   it("expands multiple placeholders in one string", () => {
-    const template = "${dirName} @ ${baseUrl}${path}";
+    const template = "${folderName} @ ${baseUrl}${path}";
     expect(expandPlaceholders(template, vars)).toBe(
       "shared-files @ https://example.com/dav/shared-files/",
     );
@@ -120,7 +120,7 @@ describe("expandPlaceholders", () => {
   });
 
   it("handles repeated placeholders", () => {
-    expect(expandPlaceholders("${dirName}/${dirName}", vars)).toBe(
+    expect(expandPlaceholders("${folderName}/${folderName}", vars)).toBe(
       "shared-files/shared-files",
     );
   });

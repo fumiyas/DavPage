@@ -34,8 +34,8 @@ function setupTestFiles(): void {
     "sample.html": "<!DOCTYPE html>\n<html><head><title>Sample</title></head><body><h1>Hello</h1></body></html>\n",
     "davpage.conf": [
       "# DavPage configuration (sample)",
-      '# title = "File Exchange — ${dirName}"',
-      '# heading = "Files: ${dirName}"',
+      '# title = "File Exchange — ${folderName}"',
+      '# heading = "Files: ${folderName}"',
       "",
       "# footer = \"\"\"",
       "# <h2>Notice</h2>",
