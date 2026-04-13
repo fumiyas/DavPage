@@ -134,9 +134,9 @@ describe("defaultConfig", () => {
     expect(cfg.footer).toBe("");
     expect(cfg.upload_enabled).toBe(true);
     expect(cfg.delete_enabled).toBe(true);
-    expect(cfg.index_exclude_names).toEqual(["davpage.*", "index.htm*", ".ht*"]);
-    expect(cfg.index_ignore_dot_names).toBe(true);
     expect(cfg.index_ignore_folders).toBe(false);
+    expect(cfg.index_ignore_dot_names).toBe(true);
+    expect(cfg.index_exclude_names).toEqual(["davpage.*", "index.htm*", ".ht*"]);
     expect(cfg.index_sort_ignore_case).toBe(false);
     expect(cfg.index_sort_version).toBe(true);
   });
@@ -207,6 +207,17 @@ describe("matchesAnyPattern", () => {
   });
 });
 
+describe("parseConfig index_ignore_dot_names", () => {
+  it("parses index_ignore_dot_names boolean", () => {
+    expect(parseConfig("index_ignore_dot_names = false")["index_ignore_dot_names"]).toBe(false);
+    expect(parseConfig("index_ignore_dot_names = true")["index_ignore_dot_names"]).toBe(true);
+  });
+
+  it("defaults to true", () => {
+    expect(defaultConfig().index_ignore_dot_names).toBe(true);
+  });
+});
+
 describe("parseConfig index_exclude_names (TOML array)", () => {
   it("parses inline string array", () => {
     const result = parseConfig('index_exclude_names = ["foo.html", ".ht*"]');
@@ -231,17 +242,6 @@ describe("parseConfig index_exclude_names (TOML array)", () => {
   it("handles array with single element", () => {
     const result = parseConfig('index_exclude_names = ["only"]');
     expect(result["index_exclude_names"]).toEqual(["only"]);
-  });
-});
-
-describe("parseConfig index_ignore_dot_names", () => {
-  it("parses index_ignore_dot_names boolean", () => {
-    expect(parseConfig("index_ignore_dot_names = false")["index_ignore_dot_names"]).toBe(false);
-    expect(parseConfig("index_ignore_dot_names = true")["index_ignore_dot_names"]).toBe(true);
-  });
-
-  it("defaults to true", () => {
-    expect(defaultConfig().index_ignore_dot_names).toBe(true);
   });
 });
 

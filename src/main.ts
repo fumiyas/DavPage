@@ -82,9 +82,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const allFiles = await listFiles(baseUrl);
       const files = allFiles.filter(
         (f) =>
-          !matchesAnyPattern(f.name, config.index_exclude_names) &&
+          !(config.index_ignore_folders && f.isDirectory) &&
           !(config.index_ignore_dot_names && f.name.startsWith(".")) &&
-          !(config.index_ignore_folders && f.isDirectory),
+          !matchesAnyPattern(f.name, config.index_exclude_names),
       );
       fileList.render(files);
     } catch (err) {

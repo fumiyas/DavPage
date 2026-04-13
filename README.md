@@ -109,14 +109,14 @@ footer = """
 upload_enabled = true
 delete_enabled = true
 
-# Glob patterns to exclude from the file list
-index_exclude_names = ["davpage.*", "index.htm*", ".ht*"]
+# Hide sub-folders from the file list
+index_ignore_folders = false
 
 # Hide dot-files and dot-folders (names starting with ".") from the file list
 index_ignore_dot_names = true
 
-# Hide sub-folders from the file list
-index_ignore_folders = false
+# Glob patterns to exclude from the file list
+index_exclude_names = ["davpage.*", "index.htm*", ".ht*"]
 
 # Sort file names case-insensitively
 index_sort_ignore_case = false

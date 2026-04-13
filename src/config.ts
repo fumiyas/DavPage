@@ -10,9 +10,9 @@ export interface AppConfig {
   footer: string;
   upload_enabled: boolean;
   delete_enabled: boolean;
-  index_exclude_names: string[];
-  index_ignore_dot_names: boolean;
   index_ignore_folders: boolean;
+  index_ignore_dot_names: boolean;
+  index_exclude_names: string[];
   index_sort_ignore_case: boolean;
   index_sort_version: boolean;
 }
@@ -28,9 +28,9 @@ export function defaultConfig(): AppConfig {
     footer: "",
     upload_enabled: true,
     delete_enabled: true,
-    index_exclude_names: ["davpage.*", "index.htm*", ".ht*"],
-    index_ignore_dot_names: true,
     index_ignore_folders: false,
+    index_ignore_dot_names: true,
+    index_exclude_names: ["davpage.*", "index.htm*", ".ht*"],
     index_sort_ignore_case: false,
     index_sort_version: true,
   };
@@ -256,14 +256,14 @@ function buildConfig(
   if (typeof parsed["delete_enabled"] === "boolean") {
     cfg.delete_enabled = parsed["delete_enabled"];
   }
-  if (Array.isArray(parsed["index_exclude_names"])) {
-    cfg.index_exclude_names = parsed["index_exclude_names"];
+  if (typeof parsed["index_ignore_folders"] === "boolean") {
+    cfg.index_ignore_folders = parsed["index_ignore_folders"];
   }
   if (typeof parsed["index_ignore_dot_names"] === "boolean") {
     cfg.index_ignore_dot_names = parsed["index_ignore_dot_names"];
   }
-  if (typeof parsed["index_ignore_folders"] === "boolean") {
-    cfg.index_ignore_folders = parsed["index_ignore_folders"];
+  if (Array.isArray(parsed["index_exclude_names"])) {
+    cfg.index_exclude_names = parsed["index_exclude_names"];
   }
   if (typeof parsed["index_sort_ignore_case"] === "boolean") {
     cfg.index_sort_ignore_case = parsed["index_sort_ignore_case"];
