@@ -3,20 +3,21 @@ DavPage
 
 A lightweight, single-file WebDAV folder explorer for the browser.
 
-Deploy one `index.html` to your WebDAV folder and get a full-featured
+Deploy one `davpage.html` to your WebDAV folder and get a full-featured
 file management UI — no server-side setup beyond a standard WebDAV server.
 
 ## Features
 
-- **Single-file deployment** — build produces a self-contained `dist/index.html`
-  (HTML + CSS + JS inlined) that you simply copy to your WebDAV folder
+- **Single-file deployment** — build produces a self-contained
+  `dist/davpage.html` (HTML + CSS + JS inlined) that you simply copy to your
+  WebDAV folder
 - **Multi-file upload** with drag & drop, per-file progress, and cancel
 - **Inline file viewing** — open PDFs, images, text, audio/video directly
   in the browser
 - **File list with sorting** — sort by name, size, or date
 - **Row-click selection** for batch delete
 - **Configurable** via a simple config file (`davpage.conf`) placed alongside
-  `index.html`
+  `davpage.html`
 - **Zero runtime dependencies** — pure vanilla JS in the browser
 - **No mod_autoindex dependency** — uses WebDAV PROPFIND to list files
 
@@ -31,11 +32,11 @@ file management UI — no server-side setup beyond a standard WebDAV server.
 # Install dev dependencies
 make install
 
-# Build dist/index.html
+# Build dist/davpage.html
 make build
 
 # Copy to your WebDAV folder
-cp dist/index.html /path/to/your/webdav/folder/
+cp dist/davpage.html /path/to/your/webdav/folder/
 ```
 
 ## Development
@@ -50,7 +51,7 @@ cp dist/index.html /path/to/your/webdav/folder/
 | Command          | Description                                  |
 | ---------------- | -------------------------------------------- |
 | `make install`   | Install dependencies                         |
-| `make build`     | Build `dist/index.html`                      |
+| `make build`     | Build `dist/davpage.html`                    |
 | `make test`      | Run tests                                    |
 | `make lint`      | Type-check with `tsc`                        |
 | `make serve`     | Start a local test WebDAV server             |
@@ -70,18 +71,18 @@ src/
   viewer.ts        — Inline file viewing (MIME detection)
   config.ts        — Config file parser and loader
   styles.css       — Stylesheet
-  index.html       — HTML template
+  davpage.html     — HTML template
   __tests__/       — Unit and integration tests
 scripts/
   build.ts         — esbuild bundler (produces single HTML)
   serve.ts         — Test WebDAV server
 dist/
-  index.html       — Built output (deploy this)
+  davpage.html     — Built output (deploy this)
 ```
 
 ## Configuration
 
-Place a `davpage.conf` file in the same directory as `index.html`.
+Place a `davpage.conf` file in the same directory as `davpage.html`.
 If the file is absent or returns 404, default settings are used.
 
 The format is a TOML subset supporting strings, multi-line strings,
@@ -109,7 +110,7 @@ upload_enabled = true
 delete_enabled = true
 
 # Glob patterns to exclude from the file list
-index_exclude_names = ["index.html", "davpage.conf", ".ht*"]
+index_exclude_names = ["davpage.html", "davpage.conf", ".ht*"]
 
 # Hide dot-files and dot-folders (names starting with ".") from the file list
 index_ignore_dot_names = true

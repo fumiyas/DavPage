@@ -75,14 +75,14 @@ function setupTestFiles(): void {
 
 setupTestFiles();
 
-// Copy dist/index.html to WebDAV root
-const srcIndex = resolve(ROOT, "dist", "index.html");
-const dstIndex = resolve(WEBDAV_ROOT, "index.html");
+// Copy dist/davpage.html to WebDAV root
+const srcIndex = resolve(ROOT, "dist", "davpage.html");
+const dstIndex = resolve(WEBDAV_ROOT, "davpage.html");
 if (existsSync(srcIndex)) {
   writeFileSync(dstIndex, readFileSync(srcIndex));
-  console.error(`Deployed: dist/index.html → ${dstIndex}`);
+  console.error(`Deployed: dist/davpage.html → ${dstIndex}`);
 } else {
-  console.error("Warning: dist/index.html not found. Run 'make build' first.");
+  console.error("Warning: dist/davpage.html not found. Run 'make build' first.");
 }
 
 // Logging helpers — output to stderr with ISO 8601 timestamp
@@ -107,7 +107,7 @@ const server = new webdav.WebDAVServer({
   rootFileSystem: new webdav.PhysicalFileSystem(WEBDAV_ROOT),
 });
 
-// Serve index.html for GET requests to directories
+// Serve davpage.html for GET requests to directories
 server.beforeRequest((ctx, next) => {
   const req = ctx.request;
   const method = req.method ?? "";
@@ -115,7 +115,7 @@ server.beforeRequest((ctx, next) => {
 
   if (method === "GET" && url.endsWith("/")) {
     const decodedPath = decodeURIComponent(url);
-    const indexPath = resolve(WEBDAV_ROOT, "." + decodedPath, "index.html");
+    const indexPath = resolve(WEBDAV_ROOT, "." + decodedPath, "davpage.html");
 
     if (existsSync(indexPath)) {
       const content = readFileSync(indexPath);
@@ -124,7 +124,7 @@ server.beforeRequest((ctx, next) => {
       res.setHeader("Content-Length", content.length);
       res.writeHead(200);
       res.end(content);
-      logAccess(method, url, 200, "→ index.html");
+      logAccess(method, url, 200, "→ davpage.html");
       return; // Skip WebDAV processing
     }
   }

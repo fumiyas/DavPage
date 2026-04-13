@@ -41,12 +41,12 @@ async function build(): Promise<void> {
 
   // Embed into HTML template
   // Use split/join instead of replace to avoid $ replacement patterns in JS code
-  const htmlTemplate = readFileSync(resolve(SRC, "index.html"), "utf-8");
+  const htmlTemplate = readFileSync(resolve(SRC, "davpage.html"), "utf-8");
   const html = htmlTemplate
     .split("/* __INLINE_CSS__ */").join(cssCode)
     .split("/* __INLINE_JS__ */").join(jsCode);
 
-  const outPath = resolve(DIST, "index.html");
+  const outPath = resolve(DIST, "davpage.html");
   writeFileSync(outPath, html, "utf-8");
   console.log(`Built: ${outPath} (${(html.length / 1024).toFixed(1)} KB)`);
 }

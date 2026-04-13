@@ -34,7 +34,7 @@ lint: node_modules
 	$(NPX) tsc --noEmit
 
 ## Start test WebDAV server
-## Deploys dist/index.html to the WebDAV root if it exists.
+## Deploys dist/davpage.html to the WebDAV root if it exists.
 serve: node_modules
 	$(NPM) run serve -- $(SERVE_PORT)
 
@@ -52,7 +52,7 @@ help:
 	@echo "Available targets:"
 	@echo ""
 	@echo "  make install    Install dependencies (first time only)"
-	@echo "  make build      Build (generates dist/index.html)  [default]"
+	@echo "  make build      Build (generates dist/davpage.html)  [default]"
 	@echo "  make test       Run tests"
 	@echo "  make lint       Static type checking (TypeScript)"
 	@echo "  make serve      Start test WebDAV server (port $(SERVE_PORT))"

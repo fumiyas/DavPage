@@ -134,7 +134,7 @@ describe("defaultConfig", () => {
     expect(cfg.footer).toBe("");
     expect(cfg.upload_enabled).toBe(true);
     expect(cfg.delete_enabled).toBe(true);
-    expect(cfg.index_exclude_names).toEqual(["index.html"]);
+    expect(cfg.index_exclude_names).toEqual(["davpage.conf"]);
     expect(cfg.index_ignore_folders).toBe(false);
   });
 });
@@ -182,11 +182,11 @@ describe("globToRegex", () => {
 });
 
 describe("matchesAnyPattern", () => {
-  const patterns = ["index.html", "davpage.conf", ".ht*", "*.tmp"];
+  const patterns = ["index.html", "hidden.txt", ".ht*", "*.tmp"];
 
   it("matches exact names in pattern list", () => {
     expect(matchesAnyPattern("index.html", patterns)).toBe(true);
-    expect(matchesAnyPattern("davpage.conf", patterns)).toBe(true);
+    expect(matchesAnyPattern("hidden.txt", patterns)).toBe(true);
   });
 
   it("matches glob patterns in list", () => {
@@ -206,18 +206,18 @@ describe("matchesAnyPattern", () => {
 
 describe("parseConfig index_exclude_names (TOML array)", () => {
   it("parses inline string array", () => {
-    const result = parseConfig('index_exclude_names = ["index.html", ".ht*"]');
-    expect(result["index_exclude_names"]).toEqual(["index.html", ".ht*"]);
+    const result = parseConfig('index_exclude_names = ["foo.html", ".ht*"]');
+    expect(result["index_exclude_names"]).toEqual(["foo.html", ".ht*"]);
   });
 
   it("parses multi-line string array", () => {
     const input = `index_exclude_names = [
-  "index.html",
-  "davpage.conf",
+  "foo.html",
+  "bar.conf",
   ".ht*",
 ]`;
     const result = parseConfig(input);
-    expect(result["index_exclude_names"]).toEqual(["index.html", "davpage.conf", ".ht*"]);
+    expect(result["index_exclude_names"]).toEqual(["foo.html", "bar.conf", ".ht*"]);
   });
 
   it("parses empty array", () => {

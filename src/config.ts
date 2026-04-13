@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2026 SATOH Fumiyasu @ OSSTech Corp., Japan
 
 // Configuration file loader and parser
-// Reads a TOML-subset config file (davpage.conf) from the same directory as index.html
+// Reads a TOML-subset config file (davpage.conf) from the same directory as davpage.html
 
 export interface AppConfig {
   title: string;
