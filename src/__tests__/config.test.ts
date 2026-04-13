@@ -135,7 +135,10 @@ describe("defaultConfig", () => {
     expect(cfg.upload_enabled).toBe(true);
     expect(cfg.delete_enabled).toBe(true);
     expect(cfg.index_exclude_names).toEqual(["davpage.*", "index.htm*", ".ht*"]);
+    expect(cfg.index_ignore_dot_names).toBe(true);
     expect(cfg.index_ignore_folders).toBe(false);
+    expect(cfg.index_sort_ignore_case).toBe(false);
+    expect(cfg.index_sort_version).toBe(true);
   });
 });
 
