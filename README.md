@@ -30,7 +30,7 @@ file management UI — no server-side setup beyond a standard WebDAV server.
 
 ```bash
 # Install dev dependencies
-make install
+make deps
 
 # Build dist/davpage.html
 make build
@@ -50,7 +50,7 @@ cp dist/davpage.html /path/to/your/webdav/folder/
 
 | Command          | Description                                  |
 | ---------------- | -------------------------------------------- |
-| `make install`   | Install dependencies                         |
+| `make deps`      | Install dependencies                         |
 | `make build`     | Build `dist/davpage.html`                    |
 | `make test`      | Run tests                                    |
 | `make lint`      | Type-check with `tsc`                        |

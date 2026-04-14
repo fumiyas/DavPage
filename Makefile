@@ -16,9 +16,7 @@ default: build
 # Targets
 # ============================================================
 
-## Install dependencies
-## Run this for initial setup.
-install: node_modules
+deps: node_modules
 
 node_modules: package.json package-lock.json
 	$(NPM) ci
@@ -51,7 +49,7 @@ distclean: clean
 help:
 	@echo "Available targets:"
 	@echo ""
-	@echo "  make install    Install dependencies (first time only)"
+	@echo "  make deps       Install dependencies (first time only)"
 	@echo "  make build      Build (generates dist/davpage.html)  [default]"
 	@echo "  make test       Run tests"
 	@echo "  make lint       Static type checking (TypeScript)"
@@ -61,4 +59,4 @@ help:
 	@echo "  make distclean  Full clean (includes node_modules)"
 	@echo "  make help       Show this help"
 
-.PHONY: install build test lint serve dev clean distclean help
+.PHONY: deps build test lint serve dev clean distclean help
